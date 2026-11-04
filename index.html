@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIMBA - Sistem Informasi Manajemen Barang</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- LOADING -->
+  <section id="loading" class="loading-screen">
+    <div class="loader-content">
+      <div class="runner-scene">
+        <div class="runner"><i class="bi bi-person-walking"></i></div>
+        <div class="runner-line"></div>
+      </div>
+      <div class="loading-logo">
+        <img src="logobaru.png" alt="Logo SIMBA" onerror="this.style.display='none'">
+        <span class="logo-fallback"><i class="bi bi-box-seam"></i></span>
+      </div>
+      <h1>SIMBA<span></span></h1>
+      <p>Sistem Informasi inventaris & peminjaman barang Inspektorat</p>
+      <div class="progress-track"><div id="progressBar"></div></div>
+      <span id="progressText">0%</span>
+      <small>Menyiapkan Aplikasi</small>
+    </div>
+  </section>
+
+  <!-- LOGIN ADMIN -->
+  <section id="loginPage" class="login-page hidden">
+    <div class="login-decoration decoration-one"></div>
+    <div class="login-decoration decoration-two"></div>
+
+    <div class="login-box">
+      <div class="login-brand">
+        <div class="login-logo">
+          <img src="insp.png" alt="Inspektorat" onerror="this.style.display='none'">
+          <i class="bi bi-building"></i>
+        </div>
+        <span class="eyebrow">INSPEKTORAT</span>
+        <h1>Selamat Datang</h1>
+        <p>Masuk ke Sistem Informasi Investaris Inspektorat</p>
+      </div>
+
+      <form id="loginForm">
+        <label for="username">Username</label>
+        <div class="input-icon">
+          <i class="bi bi-person"></i>
+          <input type="text" id="username" placeholder="Masukkan username" autocomplete="username" required>
+        </div>
+
+        <label for="password">Password</label>
+        <div class="input-icon">
+          <i class="bi bi-lock"></i>
+          <input type="password" id="password" placeholder="Masukkan password" autocomplete="current-password" required>
+        </div>
+
+        <button class="btn-primary login-button" type="submit">
+          Masuk
+        </button>
+        <p id="loginError" class="login-error" role="alert"></p>
+      </form>
+
+      <div class="login-note">
+        <i class="bi bi-shield-check"></i>
+        Halaman khusus administrator
+      </div>
+      <small class="login-footer">SIMBA · Inspektorat by zahwa pinky qumairah</small>
+    </div>
+  </section>
+
+  <!-- APLIKASI -->
+  <div id="app" class="app hidden">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+
+        <div>
+          <strong>SIMBA<span></span></strong>
+          <small>inventaris Barang</small>
+        </div>
+      </div>
+
+      <div class="side-label">MENU UTAMA</div>
+
+      <nav class="side-nav">
+        <button class="nav-link active" data-page="dashboard">
+          <i class="bi bi-grid-1x2"></i><span>Dashboard</span>
+        </button>
+        <button class="nav-link admin-only" data-page="barang">
+          <i class="bi bi-box"></i><span>Data Barang</span>
+        </button>
+        <button class="nav-link" data-page="katalog">
+          <i class="bi bi-collection"></i><span>Katalog Barang</span>
+        </button>
+        <button class="nav-link" data-page="peminjaman">
+          <i class="bi bi-box-arrow-up-right"></i><span>Peminjaman</span>
+        </button>
+        <button class="nav-link" data-page="pengembalian">
+          <i class="bi bi-arrow-return-left"></i><span>Pengembalian</span>
+        </button>
+        <button class="nav-link admin-only" data-page="pegawai">
+          <i class="bi bi-people"></i><span>Data Pegawai</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-tip">
+          <i class="bi bi-heart"></i>
+          <p>Kelola inventaris dengan lebih mudah.</p>
+        </div>
+        <button id="logoutBtn" class="logout-button">
+          <i class="bi bi-box-arrow-left"></i> Keluar
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="Buka menu">
+          <i class="bi bi-list"></i>
+        </button>
+        <div>
+          <span class="top-eyebrow">SISTEM INFORMASI</span>
+          <h2 id="pageTitle">Dashboard</h2>
+        </div>
+        <div class="profile">
+          <div class="admin-avatar">
+            <img src="y.jpeg" alt="Administrator">
+            </div>
+          <div>
+            <strong id="userName">zahwa</strong>
+            <small id="userRole">Zahwa</small>
+          </div>
+        </div>
+      </header>
+
+      <!-- DASHBOARD -->
+      <section id="dashboard" class="page active">
+        <div class="welcome-panel">
+          <div>
+            <span class="eyebrow"></span>
+            <h1>Halo, Zahwa <span></span></h1>
+            <p>Pantau barang, peminjaman, dan pengembalian dalam satu tempat</p>
+          </div>
+          <div class="dashboard-image">
+         <img src="logobaru.png" alt="Foto Dashboard SIMBA">
+        </div>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <div><span>Total Jenis Barang</span><strong id="totalBarang">0</strong><small>Jenis inventaris</small></div>
+          </article>
+          <article class="stat-card">
+            <div><span>Stok Tersedia</span><strong id="totalStok">0</strong><small>Barang siap digunakan</small></div>
+          </article>
+          <article class="stat-card">
+            <div><span>Sedang Dipinjam</span><strong id="totalPinjam">0</strong><small>Total unit dipinjam</small></div>
+          </article>
+          <article class="stat-card">
+            <div><span>Pengembalian Selesai</span><strong id="totalKembali">0</strong><small>Transaksi selesai</small></div>
+          </article>
+        </div>
+
+        <div class="panel">
+          <div class="panel-heading">
+            <div><span class="eyebrow">INVENTARIS</span><h3>Barang Terbaru</h3></div>
+            <button class="text-button" data-go="katalog">Lihat katalog</button>
+          </div>
+          <div id="barangTerbaru" class="recent-grid">
+            <div class="empty-state">Belum ada barang yang ditambahkan.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DATA BARANG -->
+      <section id="barang" class="page">
+        <div class="page-intro">
+          <div>
+            <span class="eyebrow">KELOLA INVENTARIS</span>
+            <h1>Data Barang</h1>
+            <p>Tambah, ubah, cari, dan hapus data barang inventaris.</p>
+          </div>
+          <button id="tambahBarang" class="btn-primary">
+            <i class="bi bi-plus-lg"></i> Tambah Barang
+          </button>
+        </div>
+
+        <div class="panel">
+          <div class="toolbar">
+            <div class="search-box">
+              <i class="bi bi-search"></i>
+              <input id="cariBarang" type="search" placeholder="Cari nama barang...">
+            </div>
+            <select id="filterBarang" class="filter-select">
+              <option value="">Semua Kategori</option>
+              <option value="ATK">ATK</option>
+              <option value="Elektronik">Elektronik</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Nama Barang</th><th>Kategori</th><th>Jumlah Stok</th><th>Aksi</th></tr>
+              </thead>
+              <tbody id="tabelBarang">
+                <tr><td colspan="4">Belum ada data barang.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- KATALOG -->
+      <section id="katalog" class="page">
+        <div class="page-intro">
+          <div>
+            <span class="eyebrow">DAFTAR INVENTARIS</span>
+            <h1>Katalog Barang</h1>
+            <p>Lihat seluruh barang yang tersedia di Inspektorat.</p>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="toolbar">
+            <div class="search-box">
+              <i class="bi bi-search"></i>
+              <input id="cariKatalog" type="search" placeholder="Cari barang...">
+            </div>
+            <select id="kategoriKatalog" class="filter-select">
+              <option value="">Semua Kategori</option>
+              <option value="ATK">ATK</option>
+              <option value="Elektronik">Elektronik</option>
+            </select>
+          </div>
+          <div id="katalogGrid" class="catalog-grid">
+            <div class="empty-state">Belum ada barang di katalog.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PEMINJAMAN -->
+      <section id="peminjaman" class="page">
+        <div class="page-intro">
+          <div>
+            <span class="eyebrow">TRANSAKSI BARANG</span>
+            <h1>Peminjaman Barang</h1>
+            <p>Catat pegawai dan barang yang dipinjam.</p>
+          </div>
+        </div>
+
+        <div class="panel form-panel">
+          <div class="panel-heading">
+            <div><span class="eyebrow">FORMULIR</span><h3>Data Peminjaman</h3></div>
+            <div class="heading-icon"></i></div>
+          </div>
+
+          <form id="formPinjam" class="form-grid">
+            <div class="form-group">
+              <label for="unitPinjam">Unit / Bagian</label>
+              <select id="unitPinjam" required><option value="">Pilih unit</option></select>
+            </div>
+            <div class="form-group">
+              <label for="namaPinjam">Nama Pegawai</label>
+              <select id="namaPinjam" required><option value="">Pilih nama pegawai</option></select>
+            </div>
+            <div class="form-group">
+              <label for="barangPinjam">Nama Barang</label>
+              <select id="barangPinjam" required><option value="">Pilih barang</option></select>
+            </div>
+            <div class="form-group">
+              <label for="jumlahPinjam">Jumlah</label>
+              <input type="number" id="jumlahPinjam" min="1" step="1" placeholder="Masukkan jumlah" required>
+            </div>
+            <div class="form-group">
+              <label for="tanggalPinjam">Tanggal Pinjam</label>
+              <input type="date" id="tanggalPinjam" required>
+            </div>
+            <div class="form-actions">
+              <button class="btn-primary" type="submit"></i> Simpan Peminjaman</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- PENGEMBALIAN -->
+      <section id="pengembalian" class="page">
+        <div class="page-intro">
+          <div>
+            <span class="eyebrow">TRANSAKSI BARANG</span>
+            <h1>Pengembalian</h1>
+            <p>Konfirmasi barang yang sudah dikembalikan agar stok bertambah otomatis.</p>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-heading">
+            <div><span class="eyebrow">DAFTAR TRANSAKSI</span><h3>Barang Sedang Dipinjam</h3></div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Nama Pegawai</th><th>Unit</th><th>Nama Barang</th><th>Jumlah</th><th>Aksi</th></tr></thead>
+              <tbody id="tabelKembali">
+                <tr><td colspan="5">Tidak ada barang yang sedang dipinjam.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- DATA PEGAWAI -->
+      <section id="pegawai" class="page">
+        <div class="page-intro">
+          <div>
+            <span class="eyebrow">DATA MASTER</span>
+            <h1>Data Pegawai</h1>
+            <p>Kelola nama pegawai berdasarkan unit atau bagian.</p>
+          </div>
+          <button id="tambahPegawai" class="btn-primary">
+            <i class="bi bi-person-plus"></i> Tambah Pegawai
+          </button>
+        </div>
+        <div class="panel">
+          <div class="toolbar">
+            <div class="toolbar-title">Daftar Pegawai</div>
+            <select id="filterUnit" class="filter-select"><option value="">Semua Unit</option></select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Nama Pegawai</th><th>Unit / Bagian</th><th>Aksi</th></tr></thead>
+              <tbody id="tabelPegawai">
+                <tr><td colspan="3">Belum ada data pegawai.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <footer class="app-footer">
+        SIMBA · Sistem Informasi Manajemen Barang <span>Inspektorat</span>
+      </footer>
+    </main>
+  </div>
+
+  <!-- MODAL BARANG -->
+  <div id="modalBarang" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-heading">
+        <div><span class="eyebrow">INVENTARIS</span><h3 id="judulModal">Tambah Barang</h3></div>
+        <button type="button" class="modal-close" data-close="modalBarang" aria-label="Tutup">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <form id="formBarang">
+        <input type="hidden" id="editId">
+        <div class="form-group">
+          <label for="namaBarang">Nama Barang</label>
+          <input type="text" id="namaBarang" placeholder="Contoh: Laptop" required>
+        </div>
+        <div class="form-group">
+          <label for="kategoriBarang">Kategori</label>
+          <select id="kategoriBarang" required>
+            <option value="">Pilih kategori</option>
+            <option value="ATK">ATK</option>
+            <option value="Elektronik">Elektronik</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="stokBarang">Jumlah Stok</label>
+          <input type="number" id="stokBarang" min="0" step="1" placeholder="Masukkan jumlah stok" required>
+        </div>
+        <div class="form-group">
+          <label for="fotoBarang">Foto Barang <span class="optional">(opsional, maks. 2 MB)</span></label>
+          <input type="file" id="fotoBarang" accept="image/*">
+          <img id="previewFoto" class="photo-preview hidden" alt="Pratinjau foto">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-light" data-close="modalBarang">Batal</button>
+          <button type="submit" class="btn-primary">Simpan Barang</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL PEGAWAI -->
+  <div id="modalPegawai" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-heading">
+        <div><span class="eyebrow">DATA MASTER</span><h3>Tambah Pegawai</h3></div>
+        <button type="button" class="modal-close" data-close="modalPegawai" aria-label="Tutup">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <form id="formPegawai">
+        <div class="form-group">
+          <label for="inputNamaPegawai">Nama Pegawai</label>
+          <input type="text" id="inputNamaPegawai" placeholder="Masukkan nama pegawai" required>
+        </div>
+        <div class="form-group">
+          <label for="inputUnitPegawai">Unit / Bagian</label>
+          <select id="inputUnitPegawai" required><option value="">Pilih unit</option></select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-light" data-close="modalPegawai">Batal</button>
+          <button type="submit" class="btn-primary">Simpan Pegawai</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script src="js/script.js"></script>
+</body>
+</html>
