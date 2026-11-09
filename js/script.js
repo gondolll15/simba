@@ -1,7 +1,10 @@
 // SIMBA - Sistem Informasi Manajemen Barang | Inspektorat
 "use strict";
 
-// DAFTAR UNIT
+// ==========================================
+// DAFTAR UNIT / BAGIAN
+// ==========================================
+
 const units = [
   "Irban I",
   "Irban II",
@@ -15,7 +18,10 @@ const units = [
 
 const $ = id => document.getElementById(id);
 
+// ==========================================
 // MEMBACA DATA LOCAL STORAGE
+// ==========================================
+
 const baca = (key, fallback = []) => {
   try {
     const data = JSON.parse(localStorage.getItem(key));
@@ -33,7 +39,10 @@ let user = null;
 let fotoSementara = "";
 let toastTimer;
 
+// ==========================================
 // SIMPAN DATA
+// ==========================================
+
 function simpanData() {
   try {
     localStorage.setItem("simba_barang", JSON.stringify(barang));
@@ -46,7 +55,10 @@ function simpanData() {
   }
 }
 
+// ==========================================
 // MENGAMANKAN TEKS INPUT
+// ==========================================
+
 function aman(teks) {
   return String(teks ?? "").replace(/[&<>"']/g, karakter => ({
     "&": "&amp;",
@@ -57,13 +69,19 @@ function aman(teks) {
   })[karakter]);
 }
 
+// ==========================================
 // GAMBAR PENGGANTI
+// ==========================================
+
 function placeholder(nama) {
   const label = encodeURIComponent(String(nama || "Barang").slice(0, 25));
   return `https://placehold.co/500x400/FCE4EC/AD1457?text=${label}`;
 }
 
+// ==========================================
 // NOTIFIKASI
+// ==========================================
+
 function pesan(teks) {
   const el = $("toast");
 
@@ -82,7 +100,10 @@ function pesan(teks) {
   }, 2600);
 }
 
+// ==========================================
 // TANGGAL HARI INI
+// ==========================================
+
 function tanggalHariIni() {
   const d = new Date();
   const offset = d.getTimezoneOffset();
@@ -127,7 +148,6 @@ function login(e) {
   const password = $("password").value;
 
   if (username === "admin" && password === "admin123") {
-
     user = {
       nama: "Administrator",
       role: "admin"
@@ -140,7 +160,6 @@ function login(e) {
 
     $("userName").textContent = user.nama;
     $("userRole").textContent = "Administrator";
-    $("avatar").textContent = "A";
 
     document.querySelectorAll(".admin-only").forEach(el => {
       el.classList.remove("hidden");
@@ -179,7 +198,6 @@ function logout() {
 // ==========================================
 
 function pindahHalaman(nama) {
-
   const halaman = $(nama);
 
   if (!halaman || !halaman.classList.contains("page")) return;
@@ -230,17 +248,13 @@ function tampilkanSemua() {
 // ==========================================
 
 function renderDashboard() {
-
-  // Total jenis barang
   $("totalBarang").textContent = barang.length;
 
-  // Total stok tersedia
   $("totalStok").textContent = barang.reduce(
     (total, b) => total + Number(b.stok || 0),
     0
   );
 
-  // Total barang sedang dipinjam
   $("totalPinjam").textContent = pinjaman
     .filter(p => !p.kembali)
     .reduce(
@@ -248,12 +262,10 @@ function renderDashboard() {
       0
     );
 
-  // Total transaksi pengembalian selesai
   $("totalKembali").textContent = pinjaman.filter(
     p => p.kembali
   ).length;
 
-  // Barang terbaru
   const terbaru = barang.slice(-4).reverse();
 
   $("barangTerbaru").innerHTML = terbaru.length
@@ -271,7 +283,6 @@ function renderDashboard() {
 // ==========================================
 
 function renderBarang() {
-
   const kata = $("cariBarang").value.toLowerCase().trim();
   const kategori = $("filterBarang").value;
 
@@ -289,22 +300,15 @@ function renderBarang() {
               <b>${aman(b.nama)}</b>
             </div>
           </td>
-
           <td>${aman(b.kategori)}</td>
           <td>${Number(b.stok)}</td>
-
           <td>
-            <button class="action-btn"
-              type="button"
-              onclick="editBarang(${Number(b.id)})"
-              title="Edit">
+            <button class="action-btn" type="button"
+              onclick="editBarang(${Number(b.id)})" title="Edit">
               <i class="bi bi-pencil"></i>
             </button>
-
-            <button class="action-btn"
-              type="button"
-              onclick="hapusBarang(${Number(b.id)})"
-              title="Hapus">
+            <button class="action-btn" type="button"
+              onclick="hapusBarang(${Number(b.id)})" title="Hapus">
               <i class="bi bi-trash"></i>
             </button>
           </td>
@@ -318,7 +322,6 @@ function renderBarang() {
 // ==========================================
 
 function bukaModalBarang() {
-
   $("formBarang").reset();
 
   $("editId").value = "";
@@ -338,10 +341,7 @@ function bukaModalBarang() {
 // ==========================================
 
 function editBarang(id) {
-
-  const b = barang.find(
-    x => Number(x.id) === Number(id)
-  );
+  const b = barang.find(x => Number(x.id) === Number(id));
 
   if (!b) return;
 
@@ -371,7 +371,6 @@ function editBarang(id) {
 // ==========================================
 
 function hapusBarang(id) {
-
   const sedangDipinjam = pinjaman.some(
     p => Number(p.barangId) === Number(id) && !p.kembali
   );
@@ -383,13 +382,11 @@ function hapusBarang(id) {
 
   if (!confirm("Yakin ingin menghapus barang ini?")) return;
 
-  barang = barang.filter(
-    b => Number(b.id) !== Number(id)
-  );
+  barang = barang.filter(b => Number(b.id) !== Number(id));
 
-  simpanData();
+  if (!simpanData()) return;
+
   tampilkanSemua();
-
   pesan("Data barang berhasil dihapus.");
 }
 
@@ -398,7 +395,6 @@ function hapusBarang(id) {
 // ==========================================
 
 function simpanBarang(e) {
-
   e.preventDefault();
 
   const id = Number($("editId").value);
@@ -418,15 +414,12 @@ function simpanBarang(e) {
     return;
   }
 
-  // Stok tidak boleh kurang dari jumlah yang sedang dipinjam.
   const sedangDipinjam = pinjaman
     .filter(p => Number(p.barangId) === id && !p.kembali)
     .reduce((sum, p) => sum + Number(p.jumlah), 0);
 
   if (lama && stok < sedangDipinjam) {
-    alert(
-      `Stok tidak boleh kurang dari ${sedangDipinjam}, karena jumlah tersebut masih dipinjam.`
-    );
+    alert(`Stok tidak boleh kurang dari ${sedangDipinjam}, karena jumlah tersebut masih dipinjam.`);
     return;
   }
 
@@ -435,15 +428,11 @@ function simpanBarang(e) {
     nama,
     kategori,
     stok,
-    foto: fotoSementara || (
-      lama ? lama.foto : placeholder(nama)
-    )
+    foto: fotoSementara || (lama ? lama.foto : placeholder(nama))
   };
 
   if (lama) {
-    barang = barang.map(b =>
-      Number(b.id) === id ? data : b
-    );
+    barang = barang.map(b => Number(b.id) === id ? data : b);
   } else {
     barang.push(data);
   }
@@ -453,7 +442,6 @@ function simpanBarang(e) {
   $("modalBarang").classList.add("hidden");
 
   tampilkanSemua();
-
   pesan("Data barang berhasil disimpan.");
 }
 
@@ -462,7 +450,6 @@ function simpanBarang(e) {
 // ==========================================
 
 function uploadFoto(e) {
-
   const file = e.target.files[0];
 
   if (!file) return;
@@ -483,7 +470,6 @@ function uploadFoto(e) {
 
   reader.onload = () => {
     fotoSementara = reader.result;
-
     $("previewFoto").src = fotoSementara;
     $("previewFoto").classList.remove("hidden");
   };
@@ -500,7 +486,6 @@ function uploadFoto(e) {
 // ==========================================
 
 function renderKatalog() {
-
   const kata = $("cariKatalog").value.toLowerCase().trim();
   const kategori = $("kategoriKatalog").value;
 
@@ -512,15 +497,10 @@ function renderKatalog() {
   $("katalogGrid").innerHTML = data.length
     ? data.map(b => `
         <article class="catalog-card">
-          <img
-            src="${aman(b.foto || placeholder(b.nama))}"
-            alt="${aman(b.nama)}">
-
+          <img src="${aman(b.foto || placeholder(b.nama))}" alt="${aman(b.nama)}">
           <div class="catalog-info">
             <h3>${aman(b.nama)}</h3>
-            <span>
-              ${aman(b.kategori)} · Stok ${Number(b.stok)}
-            </span>
+            <span>${aman(b.kategori)} · Stok ${Number(b.stok)}</span>
           </div>
         </article>
       `).join("")
@@ -532,7 +512,6 @@ function renderKatalog() {
 // ==========================================
 
 function renderPegawai() {
-
   const unit = $("filterUnit").value;
 
   const data = pegawai.filter(p =>
@@ -545,10 +524,8 @@ function renderPegawai() {
           <td>${aman(p.nama)}</td>
           <td>${aman(p.unit)}</td>
           <td>
-            <button class="action-btn"
-              type="button"
-              onclick="hapusPegawai(${Number(p.id)})"
-              title="Hapus">
+            <button class="action-btn" type="button"
+              onclick="hapusPegawai(${Number(p.id)})" title="Hapus">
               <i class="bi bi-trash"></i>
             </button>
           </td>
@@ -562,27 +539,56 @@ function renderPegawai() {
 // ==========================================
 
 function tambahPegawai() {
-
   $("formPegawai").reset();
+
+  // Pastikan pilihan unit tersedia setiap modal dibuka.
+  isiPilihanUnitPegawai();
 
   $("modalPegawai").classList.remove("hidden");
   $("inputNamaPegawai").focus();
 }
 
-function simpanPegawai(e) {
+// ==========================================
+// ISI PILIHAN UNIT PEGAWAI
+// ==========================================
 
+function isiPilihanUnitPegawai() {
+  const inputUnit = $("inputUnitPegawai");
+
+  if (!inputUnit) {
+    console.error("Dropdown inputUnitPegawai tidak ditemukan.");
+    return;
+  }
+
+  inputUnit.innerHTML = '<option value="">Pilih unit / bagian</option>';
+
+  units.forEach(unit => {
+    const option = document.createElement("option");
+    option.value = unit;
+    option.textContent = unit;
+    inputUnit.appendChild(option);
+  });
+
+  inputUnit.disabled = false;
+}
+
+// ==========================================
+// SIMPAN PEGAWAI
+// ==========================================
+
+function simpanPegawai(e) {
   e.preventDefault();
 
   const nama = $("inputNamaPegawai").value.trim();
   const unit = $("inputUnitPegawai").value;
 
   if (!nama || !units.includes(unit)) {
-    alert("Lengkapi nama dan unit pegawai.");
+    alert("Lengkapi nama dan pilih unit / bagian pegawai.");
     return;
   }
 
   const duplikat = pegawai.some(p =>
-    p.nama.toLowerCase() === nama.toLowerCase() &&
+    String(p.nama).toLowerCase() === nama.toLowerCase() &&
     p.unit === unit
   );
 
@@ -597,12 +603,14 @@ function simpanPegawai(e) {
     unit
   });
 
-  if (!simpanData()) return;
+  if (!simpanData()) {
+    pegawai.pop();
+    return;
+  }
 
   $("modalPegawai").classList.add("hidden");
 
   tampilkanSemua();
-
   pesan("Data pegawai berhasil ditambahkan.");
 }
 
@@ -611,10 +619,7 @@ function simpanPegawai(e) {
 // ==========================================
 
 function hapusPegawai(id) {
-
-  const p = pegawai.find(
-    x => Number(x.id) === Number(id)
-  );
+  const p = pegawai.find(x => Number(x.id) === Number(id));
 
   if (!p) return;
 
@@ -631,13 +636,15 @@ function hapusPegawai(id) {
 
   if (!confirm("Yakin ingin menghapus pegawai ini?")) return;
 
-  pegawai = pegawai.filter(
-    x => Number(x.id) !== Number(id)
-  );
+  const dataLama = pegawai;
+  pegawai = pegawai.filter(x => Number(x.id) !== Number(id));
 
-  simpanData();
+  if (!simpanData()) {
+    pegawai = dataLama;
+    return;
+  }
+
   tampilkanSemua();
-
   pesan("Data pegawai berhasil dihapus.");
 }
 
@@ -646,26 +653,39 @@ function hapusPegawai(id) {
 // ==========================================
 
 function isiDropdown() {
+  const unitPinjam = $("unitPinjam");
+  const filterUnit = $("filterUnit");
 
-  const options = units.map(u => `
-    <option value="${aman(u)}">${aman(u)}</option>
-  `).join("");
+  if (!unitPinjam || !filterUnit) {
+    console.error("Dropdown unit tidak ditemukan.");
+    return;
+  }
 
-  $("unitPinjam").innerHTML =
-    '<option value="">Pilih unit</option>' + options;
+  const buatOptions = units.map(unit => {
+    const option = document.createElement("option");
+    option.value = unit;
+    option.textContent = unit;
+    return option;
+  });
 
-  $("filterUnit").innerHTML =
-    '<option value="">Semua Unit</option>' + options;
+  unitPinjam.innerHTML = '<option value="">Pilih unit</option>';
+  filterUnit.innerHTML = '<option value="">Semua Unit</option>';
 
-  $("inputUnitPegawai").innerHTML =
-    '<option value="">Pilih unit</option>' + options;
+  buatOptions.forEach(option => {
+    unitPinjam.appendChild(option.cloneNode(true));
+    filterUnit.appendChild(option.cloneNode(true));
+  });
 
+  isiPilihanUnitPegawai();
   isiDropdownBarang();
   isiNamaPegawai();
 }
 
-function isiDropdownBarang() {
+// ==========================================
+// DROPDOWN BARANG
+// ==========================================
 
+function isiDropdownBarang() {
   $("barangPinjam").innerHTML =
     '<option value="">Pilih barang</option>' +
 
@@ -683,20 +703,15 @@ function isiDropdownBarang() {
 // ==========================================
 
 function isiNamaPegawai() {
-
   const unit = $("unitPinjam").value;
 
-  const daftar = pegawai.filter(
-    p => p.unit === unit
-  );
+  const daftar = pegawai.filter(p => p.unit === unit);
 
   $("namaPinjam").innerHTML =
     '<option value="">Pilih nama pegawai</option>' +
 
     daftar.map(p => `
-      <option value="${aman(p.nama)}">
-        ${aman(p.nama)}
-      </option>
+      <option value="${aman(p.nama)}">${aman(p.nama)}</option>
     `).join("");
 
   $("namaPinjam").disabled = !unit || daftar.length === 0;
@@ -707,14 +722,10 @@ function isiNamaPegawai() {
 // ==========================================
 
 function simpanPeminjaman(e) {
-
   e.preventDefault();
 
   const idBarang = Number($("barangPinjam").value);
-
-  const b = barang.find(
-    x => Number(x.id) === idBarang
-  );
+  const b = barang.find(x => Number(x.id) === idBarang);
 
   const jumlah = Number($("jumlahPinjam").value);
   const nama = $("namaPinjam").value;
@@ -747,17 +758,16 @@ function simpanPeminjaman(e) {
     tanggalKembali: ""
   });
 
-  // Kurangi stok barang
-  b.stok = Number(b.stok) - jumlah;
+  const stokLama = Number(b.stok);
+  b.stok = stokLama - jumlah;
 
   if (!simpanData()) {
     pinjaman.pop();
-    b.stok = Number(b.stok) + jumlah;
+    b.stok = stokLama;
     return;
   }
 
   $("formPinjam").reset();
-
   $("tanggalPinjam").value = tanggalHariIni();
 
   isiDropdown();
@@ -771,10 +781,7 @@ function simpanPeminjaman(e) {
 // ==========================================
 
 function renderPengembalian() {
-
-  const data = pinjaman.filter(
-    p => !p.kembali
-  );
+  const data = pinjaman.filter(p => !p.kembali);
 
   $("tabelKembali").innerHTML = data.length
     ? data.map(p => `
@@ -784,11 +791,9 @@ function renderPengembalian() {
           <td>${aman(p.barang)}</td>
           <td>${Number(p.jumlah)}</td>
           <td>
-            <button class="action-btn"
-              type="button"
+            <button class="action-btn" type="button"
               onclick="kembalikan(${Number(p.id)})">
-              <i class="bi bi-check-circle"></i>
-              Kembalikan
+              <i class="bi bi-check-circle"></i> Kembalikan
             </button>
           </td>
         </tr>
@@ -801,10 +806,7 @@ function renderPengembalian() {
 // ==========================================
 
 function kembalikan(id) {
-
-  const p = pinjaman.find(
-    x => Number(x.id) === Number(id)
-  );
+  const p = pinjaman.find(x => Number(x.id) === Number(id));
 
   if (!p || p.kembali) return;
 
@@ -812,14 +814,11 @@ function kembalikan(id) {
     `Konfirmasi ${p.jumlah} ${p.barang} dari ${p.nama} sudah dikembalikan?`
   )) return;
 
-  const b = barang.find(
-    x => Number(x.id) === Number(p.barangId)
-  );
+  const b = barang.find(x => Number(x.id) === Number(p.barangId));
 
   p.kembali = true;
   p.tanggalKembali = tanggalHariIni();
 
-  // Tambahkan stok kembali
   if (b) {
     b.stok = Number(b.stok) + Number(p.jumlah);
   }
@@ -836,7 +835,6 @@ function kembalikan(id) {
   }
 
   tampilkanSemua();
-
   pesan("Pengembalian berhasil. Stok barang sudah ditambahkan.");
 }
 
@@ -862,10 +860,7 @@ function aturTanggal() {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // Loading
   loading();
-
-  // Tanggal otomatis
   aturTanggal();
 
   // Login dan logout
